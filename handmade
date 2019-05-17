@@ -1,0 +1,387 @@
+input line = 1;
+input orange = 1;
+input l2 = 1;
+input cof1 = 1.0;
+input cof2 = 1.0;
+
+def bar2day =  BarNumber() >= 196 and BarNumber() <= 390;
+def bar1day =  BarNumber() >= 1 and BarNumber() <= 195;
+
+
+#            перший день
+
+def high3 = high;
+def bar1day1 = BarNumber() >= 1 and BarNumber() <= 95;
+
+def high4 = if BarNumber() >= 1 and BarNumber() <= 65 then high else Double.NaN;
+def high5 = if BarNumber() >= 120 and BarNumber() <= 195 then high else Double.NaN;
+def fshigh3 = HighestAll(high4);
+def fshigh4 = HighestAll(high5);
+
+def fpointup01 = fshigh3;
+def fpointup02 = fshigh3 - (fshigh3 - fshigh4) / 195;
+
+def fshmy1 = CompoundValue(1, fshmy1[1], fpointup01);
+def fshmy2 = CompoundValue(1, fshmy2[1], fpointup02);
+def fshmy3 = CompoundValue(1, fshmy3[1] - (fshmy1 - fshmy2), fpointup01);
+
+#plot smyyliniya = if BarNumber() >= 1 and BarNumber() <= 195 then shmy3 else Double.NaN;
+def fkyt = CompoundValue(1, fkyt[1] + AbsValue(fshmy1 - fshmy2) * cof1, 0);
+def ftop1day1 = if bar1day1 then high + fkyt else Double.NaN;
+def ftop1day1d = if bar1day1 then high - fkyt else Double.NaN;
+def fmtop1day1 = HighestAll(ftop1day1);
+def fmtop1day1d = HighestAll(ftop1day1d);
+
+def fbar2day1 = BarNumber() >= 100 and BarNumber() <= 195;
+def fpointup04 = fshigh3 - (fshigh3 - fshigh4);
+def fpointup03 = fshigh3 - (fshigh3 - fshigh4) / 195 * 194;
+def fshmy4 = CompoundValue(1, fshmy4[1], fpointup04);
+def fshmy5 = CompoundValue(1, fshmy5[1], fpointup03);
+def fshmy6 = CompoundValue(1, fshmy6[1] - (fshmy4 - fshmy5), fpointup04);
+def fkyt2 = CompoundValue(1, fkyt2[1] + AbsValue(fshmy4 - fshmy5) * cof2, -AbsValue(fpointup04 - fpointup01));
+
+def ftop2day1d = if fbar2day1 then high + fkyt2 else Double.NaN;
+def ftop2day1u = if fbar2day1 then high - fkyt2 else Double.NaN;
+#plot liniya = if BarNumber() >= 1 and BarNumber() <= 195 then shmy6 else Double.NaN;
+def fmtop2day1d = HighestAll(ftop2day1d);
+def fmtop2day1 = HighestAll(ftop2day1u);
+def fdiffdayud =  fmtop1day1 - ( fmtop1day1 - fmtop2day1d) / 195;
+def fdiffdaydu =  fmtop1day1d - ( fmtop1day1d - fmtop2day1) / 195;
+
+def flast1ud = CompoundValue(1, flast1ud[1],  fmtop1day1);
+def flast2ud = CompoundValue(1, flast2ud[1], fdiffdayud);
+def flast3ud = CompoundValue(1, flast3ud[1] - AbsValue((flast1ud - flast2ud)), fmtop1day1);
+def flast4ud =  if bar1day then flast3ud else Double.NaN;
+
+def flast1du = CompoundValue(1, flast1du[1],  fmtop1day1d);
+def flast2du = CompoundValue(1, flast2du[1], fdiffdaydu);
+def flast3du = CompoundValue(1, flast3du[1] + AbsValue((flast1du - flast2du)), fmtop1day1d); 
+def flast4du =  if bar1day then flast3du else Double.NaN;
+def flast = if fshigh3 > fshigh4 then flast4ud else flast4du;
+def flast1udu = if fshigh3 > fshigh4 then flast1ud else flast1du;
+def flast2udu = if fshigh3 > fshigh4 then flast2ud else flast2du;
+
+#               2 етап
+def shigh3 = if fshigh3 > fshigh4 then HighestAll(ftop1day1) else HighestAll(ftop1day1d);
+def shigh4 = if fshigh3 > fshigh4 then HighestAll(ftop2day1d) else HighestAll(ftop2day1u);
+def pointup01 = shigh3;
+def pointup02 = shigh3 - (shigh3 - shigh4) / 195;
+
+def shmy1 = CompoundValue(1, shmy1[1], pointup01);
+def shmy2 = CompoundValue(1, shmy2[1], pointup02);
+def shmy3 = CompoundValue(1, shmy3[1] - (shmy1 - shmy2), pointup01);
+
+#plot smyyliniya = if BarNumber() >= 1 and BarNumber() <= 195 then shmy3 else Double.NaN;
+def kyt = CompoundValue(1, kyt[1] + AbsValue(shmy1 - shmy2) * cof1, 0);
+def top1day1 = if bar1day1 then high + kyt else Double.NaN;
+def top1day1d = if bar1day1 then high - kyt else Double.NaN;
+def mtop1day1 = HighestAll(top1day1);
+def mtop1day1d = HighestAll(top1day1d);
+
+def bar2day1 = BarNumber() >= 100 and BarNumber() <= 195;
+def pointup04 = shigh3 - (shigh3 - shigh4);
+def pointup03 = shigh3 - (shigh3 - shigh4) / 195 * 194;
+def shmy4 = CompoundValue(1, shmy4[1], pointup04);
+def shmy5 = CompoundValue(1, shmy5[1], pointup03);
+def shmy6 = CompoundValue(1, shmy6[1] - (shmy4 - shmy5), pointup04);
+def kyt2 = CompoundValue(1, kyt2[1] + AbsValue(shmy4 - shmy5) * cof2, -AbsValue(pointup04 - pointup01));
+
+def top2day1d = if bar2day1 then high + kyt2 else Double.NaN;
+def top2day1u = if bar2day1 then high - kyt2 else Double.NaN;
+#plot liniya = if BarNumber() >= 1 and BarNumber() <= 195 then shmy6 else Double.NaN;
+def mtop2day1d = HighestAll(top2day1d);
+def mtop2day1 = HighestAll(top2day1u);
+def diffdayud =  mtop1day1 - ( mtop1day1 - mtop2day1d) / 195;
+def diffdaydu =  mtop1day1d - ( mtop1day1d - mtop2day1) / 195;
+
+def last1ud = CompoundValue(1, last1ud[1],  mtop1day1);
+def last2ud = CompoundValue(1, last2ud[1], diffdayud);
+def last3ud = CompoundValue(1, last3ud[1] - AbsValue((last1ud - last2ud)), mtop1day1); 
+def last4ud =  if bar1day then last3ud else Double.NaN;
+
+def last1du = CompoundValue(1, last1du[1],  mtop1day1d);
+def last2du = CompoundValue(1, last2du[1], diffdaydu);
+def last3du = CompoundValue(1, last3du[1] + AbsValue((last1du - last2du)), mtop1day1d); 
+def last4du =  if bar1day then last3du else Double.NaN;
+plot last = if shigh3 > shigh4 then last4ud else last4du;
+def last1udu = if shigh3 > shigh4 then last1ud else last1du;
+def last2udu = if shigh3 > shigh4 then last2ud else last2du;
+
+
+
+#             1 день низ
+
+def my1kyt = CompoundValue(1, my1kyt[1] - AbsValue(last1udu - last2udu), 0);
+def my1kyt2 = CompoundValue(1, my1kyt2[1] + AbsValue(last1udu - last2udu), 0);
+def b1p =  if bar1day then low + my1kyt else Double.NaN;
+def b1m =  if bar1day then low + my1kyt2 else Double.NaN;
+def myp = LowestAll(b1p);
+def mym = LowestAll(b1m);
+
+def m1y3 = CompoundValue(1, m1y3[1] + AbsValue(last1udu - last2udu), myp);
+def m1y4 = CompoundValue(1, m1y4[1] - AbsValue(last1udu - last2udu), mym);
+
+def m1yy3 = if bar1day  then m1y3 else Double.NaN;
+def m1yy4 = if bar1day  then m1y4 else Double.NaN;
+
+plot a1ngle = if shigh3 > shigh4 then m1yy4 else m1yy3;
+
+
+#             другий день
+
+def hday = if BarNumber() > 195 then high else Double.NaN;
+def lday = if BarNumber() > 195 then low else Double.NaN;
+
+def hall = HighestAll(hday);
+def lall = LowestAll(lday);
+def lend = LowestAll(InertiaAll(data = low, length = 2));
+def hend = HighestAll(InertiaAll(data = high, length = 2));
+
+def mybp = CompoundValue(196, mybp[1] + AbsValue(last1udu - last2udu), 0);
+def mybm = CompoundValue(196, mybm[1] - AbsValue(last1udu - last2udu), 0);
+def bp =  if bar2day then high + mybp else Double.NaN;
+def bm =  if bar2day then low + mybm else Double.NaN;
+def emyp = HighestAll(bp);
+def emym = LowestAll(bm);
+
+def my3 = CompoundValue(195, my3[1] - AbsValue(last1udu - last2udu), emyp);
+def my4 = CompoundValue(195, my4[1] + AbsValue(last1udu - last2udu), emym);
+
+def myy3 = if bar2day  then my3 else Double.NaN;
+def myy4 = if bar2day  then my4 else Double.NaN;
+
+def end = if AbsValue(hall - lend) > AbsValue(lall - hend) then lend else hend;
+plot angle = if AbsValue(hall - lend) > AbsValue(lall - hend) then myy3 else myy4;
+
+
+#          2 день інша лінія
+
+def vidstan = if shigh3 > shigh4 then mym else myp;
+def vidstan2 = if shigh3 > shigh4 then mtop1day1 else mtop1day1d;
+def my32 = CompoundValue(195, my32[1] - AbsValue(last1udu - last2udu), emyp - (vidstan2 - vidstan));
+def my42 = CompoundValue(195, my42[1] + AbsValue(last1udu - last2udu), emym + (vidstan2 - vidstan));
+
+def myy32 = if bar2day  then my32 else Double.NaN;
+def myy42 = if bar2day  then my42 else Double.NaN;
+
+plot angle2 = if AbsValue(hall - lend) > AbsValue(lall - hend) then myy32 else myy42;
+
+#                 2 день середня лінія
+
+def vidstan0 = if shigh3 > shigh4 then mym else myp;
+def vidstan02 = if shigh3 > shigh4 then mtop1day1 else mtop1day1d;
+def my320 = CompoundValue(195, my320[1] - AbsValue(last1udu - last2udu), emyp - (vidstan02 - vidstan0) / 2);
+def my420 = CompoundValue(195, my420[1] + AbsValue(last1udu - last2udu), emym + (vidstan02 - vidstan0) / 2);
+
+def myy320 = if bar2day  then my320 else Double.NaN;
+def myy420 = if bar2day  then my420 else Double.NaN;
+
+plot angle20 = if AbsValue(hall - lend) > AbsValue(lall - hend) then myy320 else myy420;
+
+
+
+#            перший день низ
+
+def flhigh3 = low;
+def flbar1day1 = BarNumber() >= 1 and BarNumber() <= 95;
+
+def flhigh4 = if BarNumber() >= 1 and BarNumber() <= 70 then low else Double.NaN;
+def flhigh5 = if BarNumber() >= 120 and BarNumber() <= 195 then low else Double.NaN;
+def flshigh3 = lowestAll(flhigh4);
+def flshigh4 = lowestAll(flhigh5);
+
+def flpointup01 = flshigh3;
+def flpointup02 = flshigh3 - (flshigh3 - flshigh4) / 195;
+
+def flshmy1 = CompoundValue(1, flshmy1[1], flpointup01);
+def flshmy2 = CompoundValue(1, flshmy2[1], flpointup02);
+def flshmy3 = CompoundValue(1, flshmy3[1] - (flshmy1 - flshmy2), flpointup01);
+
+
+#plot smyy = if BarNumber() >= 1 and BarNumber() <= 390 then shmy3 else Double.NaN;
+def flkyt = CompoundValue(1, flkyt[1] + AbsValue(flshmy1 - flshmy2) * cof1, 0);
+def fltop1day1 = if flbar1day1 then low + flkyt else Double.NaN;
+def fltop1day1d = if flbar1day1 then low - flkyt else Double.NaN;
+def flmtop1day1 = lowestAll(fltop1day1);
+def flmtop1day1d = lowestAll(fltop1day1d);
+
+def flbar2day1 = BarNumber() >= 120 and BarNumber() <= 195;
+def flpointup04 = flshigh3 - (flshigh3 - flshigh4);
+def flpointup03 = flshigh3 - (flshigh3 - flshigh4) / 195 * 194;
+def flshmy4 = CompoundValue(1, flshmy4[1], flpointup04);
+def flshmy5 = CompoundValue(1, flshmy5[1], flpointup03);
+def flshmy6 = CompoundValue(1, flshmy6[1] - (flshmy4 - flshmy5), flpointup04);
+def flkyt2 = CompoundValue(1, flkyt2[1] + AbsValue(flshmy4 - flshmy5) * cof2, -AbsValue(flpointup04 - flpointup01));
+
+def fltop2day1d = if flbar2day1 then low + flkyt2 else Double.NaN;
+def fltop2day1u = if flbar2day1 then low - flkyt2 else Double.NaN;
+#plot liniya = if BarNumber() >= 1 and BarNumber() <= 390 then shmy6 else Double.NaN;
+def flmtop2day1d = lowestAll(fltop2day1d);
+def flmtop2day1 = lowestAll(fltop2day1u);
+def fldiffdayud =  flmtop1day1 - ( flmtop1day1 - flmtop2day1d) / 195;
+def fldiffdaydu =  flmtop1day1d - ( flmtop1day1d - flmtop2day1) / 195;
+
+def fllast1ud = CompoundValue(1, fllast1ud[1],  flmtop1day1);
+def fllast2ud = CompoundValue(1, fllast2ud[1], fldiffdayud);
+def fllast3ud = CompoundValue(1, fllast3ud[1] - AbsValue((fllast1ud - fllast2ud)), flmtop1day1);
+def fllast4ud =  if bar1day then fllast3ud else Double.NaN;
+
+def fllast1du = CompoundValue(1, fllast1du[1],  flmtop1day1d);
+def fllast2du = CompoundValue(1, fllast2du[1], fldiffdaydu);
+def fllast3du = CompoundValue(1, fllast3du[1] + AbsValue((fllast1du - fllast2du)), flmtop1day1d);
+def fllast4du =  if bar1day then fllast3du else Double.NaN;
+def fllast = if flmtop1day1 > flmtop2day1 then fllast4ud else fllast4du;
+def fllast1udu = if flmtop1day1 > flmtop2day1 then fllast1ud else fllast1du;
+def fllast2udu = if flmtop1day1 > flmtop2day1 then fllast2ud else fllast2du;
+
+#            2  етап   перший день низ
+
+
+def lshigh3 = if flshigh3 > flshigh4 then lowestAll(fltop1day1) else lowestAll(fltop1day1d);
+def lshigh4 = if flshigh3 > flshigh4 then lowestAll(fltop2day1d) else lowestAll(fltop2day1u);
+
+def lpointup01 = lshigh3;
+def lpointup02 = lshigh3 - (lshigh3 - lshigh4) / 195;
+
+def lshmy1 = CompoundValue(1, lshmy1[1], lpointup01);
+def lshmy2 = CompoundValue(1, lshmy2[1], lpointup02);
+def lshmy3 = CompoundValue(1, lshmy3[1] - (lshmy1 - lshmy2), lpointup01);
+
+
+#plot smyy = if BarNumber() >= 1 and BarNumber() <= 390 then shmy3 else Double.NaN;
+def lkyt = CompoundValue(1, lkyt[1] + AbsValue(lshmy1 - lshmy2) * cof1, 0);
+def ltop1day1 = if flbar1day1 then low + lkyt else Double.NaN;
+def ltop1day1d = if flbar1day1 then low - lkyt else Double.NaN;
+def lmtop1day1 = lowestAll(ltop1day1);
+def lmtop1day1d = lowestAll(ltop1day1d);
+
+def lbar2day1 = BarNumber() >= 120 and BarNumber() <= 195;
+def lpointup04 = lshigh3 - (lshigh3 - lshigh4);
+def lpointup03 = lshigh3 - (lshigh3 - lshigh4) / 195 * 194;
+def lshmy4 = CompoundValue(1, lshmy4[1], lpointup04);
+def lshmy5 = CompoundValue(1, lshmy5[1], lpointup03);
+def lshmy6 = CompoundValue(1, lshmy6[1] - (lshmy4 - lshmy5), lpointup04);
+def lkyt2 = CompoundValue(1, lkyt2[1] + AbsValue(lshmy4 - lshmy5) * cof2, -AbsValue(lpointup04 - lpointup01));
+
+def ltop2day1d = if lbar2day1 then low + lkyt2 else Double.NaN;
+def ltop2day1u = if lbar2day1 then low - lkyt2 else Double.NaN;
+#plot liniya = if BarNumber() >= 1 and BarNumber() <= 390 then shmy6 else Double.NaN;
+def lmtop2day1d = lowestAll(ltop2day1d);
+def lmtop2day1 = lowestAll(ltop2day1u);
+def ldiffdayud =  lmtop1day1 - ( lmtop1day1 - lmtop2day1d) / 195;
+def ldiffdaydu =  lmtop1day1d - ( lmtop1day1d - lmtop2day1) / 195;
+
+def llast1ud = CompoundValue(1, llast1ud[1],  lmtop1day1);
+def llast2ud = CompoundValue(1, llast2ud[1], ldiffdayud);
+def llast3ud = CompoundValue(1, llast3ud[1] - AbsValue((llast1ud - llast2ud)), lmtop1day1);
+def llast4ud =  if bar1day then llast3ud else Double.NaN;
+
+def llast1du = CompoundValue(1, llast1du[1],  lmtop1day1d);
+def llast2du = CompoundValue(1, llast2du[1], ldiffdaydu);
+def llast3du = CompoundValue(1, llast3du[1] + AbsValue((llast1du - llast2du)), lmtop1day1d);
+def llast4du =  if bar1day then llast3du else Double.NaN;
+plot llast = if lmtop1day1 > lmtop2day1 then llast4ud else llast4du;
+def llast1udu = if lmtop1day1 > lmtop2day1 then llast1ud else llast1du;
+def llast2udu = if lmtop1day1 > lmtop2day1 then llast2ud else llast2du;
+
+#             1 день низ
+
+def lmy1kyt = CompoundValue(1, lmy1kyt[1] - AbsValue(llast1udu - llast2udu), 0);
+def lmy1kyt2 = CompoundValue(1, lmy1kyt2[1] + AbsValue(llast1udu - llast2udu), 0);
+def lb1p =  if bar1day then high + lmy1kyt else Double.NaN;
+def lb1m =  if bar1day then high + lmy1kyt2 else Double.NaN;
+def lmyp = highestAll(lb1p);
+def lmym = highestAll(lb1m);
+
+def lm1y3 = CompoundValue(1, lm1y3[1] + AbsValue(llast1udu - llast2udu), lmyp);
+def lm1y4 = CompoundValue(1, lm1y4[1] - AbsValue(llast1udu - llast2udu), lmym);
+
+def lm1yy3 = if bar1day  then lm1y3 else Double.NaN;
+def lm1yy4 = if bar1day  then lm1y4 else Double.NaN;
+
+plot la1ngle = if lmtop1day1 > lmtop2day1 then lm1yy4 else lm1yy3;
+
+
+#             другий день
+
+def lhday = if BarNumber() > 195 then high else Double.NaN;
+def llday = if BarNumber() > 195 then low else Double.NaN;
+
+def lhall = HighestAll(lhday);
+def llall = LowestAll(llday);
+def llend = LowestAll(InertiaAll(data = low, length = 2));
+def lhend = HighestAll(InertiaAll(data = high, length = 2));
+
+def lmybp = CompoundValue(196, lmybp[1] + AbsValue(llast1udu - llast2udu), 0);
+def lmybm = CompoundValue(196, lmybm[1] - AbsValue(llast1udu - llast2udu), 0);
+def lbp =  if bar2day then high + lmybp else Double.NaN;
+def lbm =  if bar2day then low + lmybm else Double.NaN;
+def lemyp = HighestAll(lbp);
+def lemym = LowestAll(lbm);
+
+def lmy3 = CompoundValue(195, lmy3[1] - AbsValue(llast1udu - llast2udu), lemyp);
+def lmy4 = CompoundValue(195, lmy4[1] + AbsValue(llast1udu - llast2udu), lemym);
+
+def lmyy3 = if bar2day  then lmy3 else Double.NaN;
+def lmyy4 = if bar2day  then lmy4 else Double.NaN;
+
+def lllend = if AbsValue(lhall - llend) > AbsValue(llall - lhend) then llend else lhend;
+plot langle = if AbsValue(lhall - llend) > AbsValue(llall - lhend) then lmyy3 else lmyy4;
+
+
+#          2 день інша лінія
+
+def lvidstan = if lmtop1day1 > lmtop2day1 then lmym else lmyp;
+def lvidstan2 = if lmtop1day1 > lmtop2day1 then lmtop1day1 else lmtop1day1d;
+def lmy32 = CompoundValue(195, lmy32[1] - AbsValue(llast1udu - llast2udu), lemyp + (lvidstan2 - lvidstan));
+def lmy42 = CompoundValue(195, lmy42[1] + AbsValue(llast1udu - llast2udu), lemym - (lvidstan2 - lvidstan));
+
+def lmyy32 = if bar2day  then lmy32 else Double.NaN;
+def lmyy42 = if bar2day  then lmy42 else Double.NaN;
+
+plot langle2 = if AbsValue(lhall - llend) > AbsValue(llall - lhend) then lmyy32 else lmyy42;
+
+#                 2 день середня лінія
+
+def lvidstan0 = if lmtop1day1 > lmtop2day1 then lmym else lmyp;
+def lvidstan02 = if lmtop1day1 > lmtop2day1 then lmtop1day1 else lmtop1day1d;
+def lmy320 = CompoundValue(195, lmy320[1] - AbsValue(llast1udu - llast2udu), lemyp + (lvidstan02 - lvidstan0) / 2);
+def lmy420 = CompoundValue(195, lmy420[1] + AbsValue(llast1udu - llast2udu), lemym - (lvidstan02 - lvidstan0) / 2);
+
+def lmyy320 = if bar2day  then lmy320 else Double.NaN;
+def lmyy420 = if bar2day  then lmy420 else Double.NaN;
+
+plot langle20 = if AbsValue(lhall - llend) > AbsValue(llall - lhend) then lmyy320 else lmyy420;
+
+angle20.SetDefaultColor(Color.GRAY);
+angle2.SetDefaultColor(Color.DARK_RED);
+angle.SetDefaultColor(Color.DARK_RED);
+last.SetDefaultColor(Color.DARK_RED);
+a1ngle.SetDefaultColor(Color.DARK_RED);
+addlabel(Yes, if close+0.05 >= angle2 and  close-0.07 <= angle2 and angle2 > angle  then "t r a d e" else ".", color = Color.DARK_GREEN);
+addlabel(Yes, if close+0.05 >= langle2 and  close-0.07 <= langle2 and langle2 > langle then "t r a d e" else ".", color = Color.LIGHT_GREEN);
+addlabel(Yes, if close-0.05 <= angle2 and  close+0.07 >= angle2 and angle2 < angle  then "t r a d e" else ".");
+addlabel(Yes, if close-0.05 <= langle2 and close+0.07 >= langle2 and langle2 < langle then "t r a d e" else ".", color = Color.DARK_ORANGE);
+langle20.SetDefaultColor(Color.DARK_GRAY);
+langle2.SetDefaultColor(Color.DARK_ORANGE);
+langle.SetDefaultColor(Color.DARK_ORANGE);
+llast.SetDefaultColor(Color.DARK_ORANGE);
+la1ngle.SetDefaultColor(Color.DARK_ORANGE);
+
+angle20.sethiding(line == 0);
+angle2.sethiding(line == 0);
+angle.sethiding(line == 0);
+last.sethiding(line == 0);
+a1ngle.sethiding(line == 0);
+
+langle20.sethiding(orange == 0);
+langle2.sethiding(orange == 0);
+langle.sethiding(orange == 0);
+llast.sethiding(orange == 0);
+la1ngle.sethiding(orange == 0);
+
+angle.sethiding(l2 == 0);
+langle.sethiding(l2 == 0);
+
+
+
